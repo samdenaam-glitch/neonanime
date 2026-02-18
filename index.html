@@ -3,68 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEON ANIME · Legal Stream</title>
+    <title>NEON ANIME – Watch Free Legal Anime</title>
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Swiper for hero carousel -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 </head>
 <body>
-<div class="wrapper">
-    <header class="glow-header">
-        <div class="logo">電·ANIME<span>LEGALstream</span></div>
-        <div class="neon-nav">
-            <a href="#" class="nav-home">HOME</a>
-            <a href="#" class="nav-new">NEW</a>
-            <a href="#" class="nav-popular">POPULAR</a>
-            <a href="#" class="nav-genres">GENRES</a>
-            <a href="#" class="nav-originals">ORIGINALS</a>
-        </div>
-        <div class="search-area">
-            <input type="text" id="search-input" placeholder="search anime..." aria-label="Search">
-            <button class="search-btn" id="search-btn"><i class="fas fa-search"></i> FIND</button>
+    <!-- Sticky header with blur -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-area">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">NEON ANIME</span>
+            </div>
+            <nav class="main-nav">
+                <a href="#" class="active">Home</a>
+                <a href="#">Trending</a>
+                <a href="#">Genres</a>
+                <a href="#">Originals</a>
+                <a href="#">Public Domain</a>
+            </nav>
+            <div class="search-area">
+                <input type="text" id="search-input" placeholder="Search anime...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <i class="far fa-user-circle"></i>
+            </div>
         </div>
     </header>
 
-    <!-- HERO -->
-    <div id="hero-container">
-        <div class="loading-spinner">Loading featured...</div>
-    </div>
+    <main class="main-content">
+        <!-- Hero carousel section -->
+        <section class="hero-section">
+            <div class="swiper hero-swiper">
+                <div class="swiper-wrapper" id="hero-swiper-wrapper">
+                    <!-- Slides injected by JS -->
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </section>
 
-    <!-- TRENDING GRID -->
-    <div class="section-neon">
-        <h2>⚡ TRENDING // NEON</h2>
-        <a href="#" class="view-all-trending">view all <i class="fas fa-arrow-right"></i></a>
-    </div>
-    <div id="trending-grid" class="anime-grid">
-        <div class="loading-spinner">Loading...</div>
-    </div>
+        <!-- Genre quick filters -->
+        <section class="genre-filters">
+            <div class="filter-scroll">
+                <button class="genre-chip active">All</button>
+                <button class="genre-chip">Action</button>
+                <button class="genre-chip">Adventure</button>
+                <button class="genre-chip">Comedy</button>
+                <button class="genre-chip">Drama</button>
+                <button class="genre-chip">Fantasy</button>
+                <button class="genre-chip">Horror</button>
+                <button class="genre-chip">Sci-Fi</button>
+                <button class="genre-chip">Slice of Life</button>
+            </div>
+        </section>
 
-    <!-- CYBER CAROUSEL -->
-    <div class="section-neon">
-        <h2><i class="fas fa-sync fa-spin"></i> CYBER CAROUSEL</h2>
-        <a href="#" class="view-all-carousel">more +</a>
-    </div>
-    <div id="carousel" class="scroll-x">
-        <div class="loading-spinner">Loading...</div>
-    </div>
+        <!-- Trending now -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>🔥 Trending Now</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="anime-grid" id="trending-grid">
+                <!-- Cards injected by JS -->
+                <div class="loading-spinner">Loading...</div>
+            </div>
+        </section>
 
-    <!-- PUBLIC DOMAIN -->
-    <div class="section-neon">
-        <h2>📼 PUBLIC DOMAIN // CLASSICS</h2>
-        <a href="#" class="view-all-pd">explore archive</a>
-    </div>
-    <div id="public-domain-grid" class="anime-grid">
-        <div class="loading-spinner">Loading...</div>
-    </div>
+        <!-- Carousel / Continue watching style -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>✨ Latest Additions</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="carousel-wrapper">
+                <div class="carousel-track" id="carousel-track">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+        </section>
 
-    <footer class="legal-note">
-        <p><i class="fas fa-balance-scale"></i> LEGAL STREAMING — all content is either public domain, Creative Commons, or original. Hosted on Supabase + Netlify.</p>
+        <!-- Public domain classics -->
+        <section class="content-section">
+            <div class="section-header">
+                <h2>📼 Public Domain Classics</h2>
+                <a href="#" class="view-all">Explore <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="anime-grid" id="public-domain-grid">
+                <!-- Cards injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2025 NEON ANIME – All content is either public domain, Creative Commons, or original. <a href="#">Legal info</a></p>
+        <p>Powered by Supabase & Netlify 💜</p>
     </footer>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="script.js"></script>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
 </body>
 </html>
