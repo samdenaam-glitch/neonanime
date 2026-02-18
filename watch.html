@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEON ANIME · Watch</title>
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Watch free legal anime – public domain, indie, and Creative Commons content.">
+    <meta property="og:title" content="NEON ANIME">
+    <meta property="og:description" content="Stream classic and indie anime legally.">
+    <meta property="og:image" content="https://your-site.com/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Plyr video player (modern, clean) -->
+    <!-- Plyr video player -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <!-- Your main styles (reuse existing) -->
+    <!-- Main styles -->
     <link rel="stylesheet" href="style.css">
     <style>
         /* Additional watch page specific styles */
@@ -61,6 +67,7 @@
             gap: 2rem;
             color: var(--text-dim);
             margin: 1rem 0;
+            flex-wrap: wrap;
         }
         .description {
             line-height: 1.8;
@@ -78,6 +85,24 @@
         .back-link:hover {
             text-shadow: 0 0 8px var(--accent-secondary);
         }
+        .neon-button {
+            background: linear-gradient(145deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: 0.2s;
+        }
+        .neon-button:hover {
+            box-shadow: 0 0 20px var(--accent-secondary);
+        }
+        .neon-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .loading-spinner {
             text-align: center;
             padding: 4rem;
@@ -85,7 +110,6 @@
     </style>
 </head>
 <body>
-    <!-- Reuse same header (optional) -->
     <header class="site-header">
         <div class="header-container">
             <div class="logo-area">
@@ -100,6 +124,9 @@
             <div class="search-area" style="max-width: 300px;">
                 <input type="text" placeholder="Search...">
                 <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <i class="far fa-user-circle"></i>
             </div>
         </div>
     </header>
@@ -116,19 +143,18 @@
         <p>© 2025 NEON ANIME – Legal streaming</p>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         // Supabase config – replace with your credentials
-        const SUPABASE_URL = 'https://your-project.supabase.co';
-        const SUPABASE_ANON_KEY = 'your-anon-key';
+        const SUPABASE_URL = 'https://mwmxnicyodyxypfupdnu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im13bXhuaWN5b2R5eHlwZnVwZG51Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MTgzNTksImV4cCI6MjA4Njk5NDM1OX0.NMqzWV0bGVWJfAykqHO8KI0RXG1Po71RTSiwMbRUWwI';
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Get ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const animeId = urlParams.get('id');
+        let currentAnime = null;
 
         async function loadAnime() {
             const container = document.getElementById('watch-content');
@@ -149,42 +175,81 @@
                     container.innerHTML = '<div class="error-message">Anime not found.</div>';
                     return;
                 }
+                currentAnime = data;
 
-                // Build HTML with video player
                 container.innerHTML = `
                     <div class="video-wrapper">
                         <video id="player" playsinline controls>
-                            <source src="${data.video_url}" type="video/mp4">
+                            <source src="${data.video_url || ''}" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
                     </div>
                     <div class="anime-info">
                         <div class="info-poster">
-                            <img src="${data.cover_url}" alt="${data.title}">
+                            <img src="${data.cover_url}" alt="${data.title}" loading="lazy">
                         </div>
                         <div class="info-details">
                             <h1>${data.title}</h1>
                             <div class="meta-row">
                                 <span><i class="fas fa-star" style="color: gold;"></i> ${data.rating}%</span>
                                 <span><i class="fas fa-film"></i> ${data.type || 'Movie'}</span>
-                                <span><i class="fas fa-tag"></i> ${data.genre || 'Animation'}</span>
+                                <span><i class="fas fa-tag"></i> ${Array.isArray(data.genre) ? data.genre.join(', ') : data.genre || 'Animation'}</span>
                             </div>
                             <p class="description">${data.description || 'No description available.'}</p>
+                            <button id="add-to-list" class="neon-button">➕ Add to My List</button>
                         </div>
                     </div>
                 `;
 
-                // Initialize Plyr for better controls
+                // Initialize Plyr
                 const player = new Plyr('#player', {
                     controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
                     settings: ['quality'],
                 });
+
+                // Check if already in watchlist (if user logged in)
+                checkWatchlist();
 
             } catch (err) {
                 console.error(err);
                 container.innerHTML = `<div class="error-message">Failed to load: ${err.message}</div>`;
             }
         }
+
+        // Watchlist functionality
+        async function checkWatchlist() {
+            const { data: { user } } = await _supabase.auth.getUser();
+            if (!user || !currentAnime) return;
+            const { data, error } = await _supabase
+                .from('watchlist')
+                .select('*')
+                .eq('user_id', user.id)
+                .eq('anime_id', animeId)
+                .maybeSingle();
+            if (data) {
+                document.getElementById('add-to-list').textContent = '✔️ In My List';
+                document.getElementById('add-to-list').disabled = true;
+            }
+        }
+
+        // Add to list button
+        document.addEventListener('click', async (e) => {
+            if (e.target.id === 'add-to-list') {
+                const { data: { user } } = await _supabase.auth.getUser();
+                if (!user) {
+                    alert('Please log in first');
+                    // Optionally open auth modal
+                    return;
+                }
+                const { error } = await _supabase
+                    .from('watchlist')
+                    .insert({ user_id: user.id, anime_id: animeId });
+                if (!error) {
+                    document.getElementById('add-to-list').textContent = '✔️ Added';
+                    document.getElementById('add-to-list').disabled = true;
+                }
+            }
+        });
 
         loadAnime();
     </script>
