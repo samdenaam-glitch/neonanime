@@ -13,11 +13,12 @@ function showError(containerId, message) {
     if (container) container.innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
 }
 
-// Card renderers
+// Card renderers (now using <img> for lazy loading)
 function animeCard(anime) {
     return `
         <div class="anime-card" data-id="${anime.id}">
-            <div class="card-img" style="background-image: url('${anime.cover_url || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300&h=400&fit=crop'}');">
+            <div class="card-img">
+                <img src="${anime.cover_url || 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=300&h=400&fit=crop'}" alt="${anime.title}" loading="lazy">
                 <span class="card-badge">${anime.badge || 'NEW'}</span>
             </div>
             <div class="card-info">
@@ -34,7 +35,9 @@ function animeCard(anime) {
 function carouselCard(anime) {
     return `
         <div class="carousel-card" data-id="${anime.id}">
-            <div class="tiny-cover" style="background-image: url('${anime.cover_url}');"></div>
+            <div class="tiny-cover">
+                <img src="${anime.cover_url}" alt="${anime.title}" loading="lazy">
+            </div>
             <div>
                 <h5>${anime.title}</h5>
                 <p>${anime.genre || 'Anime'}</p>
@@ -92,7 +95,8 @@ async function loadHero() {
 // Load trending (highest rated)
 async function loadTrending() {
     const grid = document.getElementById('trending-grid');
-    grid.innerHTML = '<div class="loading-spinner">Loading...</div>';
+    // Show skeletons
+    grid.innerHTML = Array(8).fill('<div class="skeleton-card"></div>').join('');
     try {
         const { data, error } = await _supabase
             .from('anime')
@@ -109,7 +113,7 @@ async function loadTrending() {
 // Load latest additions (carousel)
 async function loadCarousel() {
     const track = document.getElementById('carousel-track');
-    track.innerHTML = '<div class="loading-spinner">Loading...</div>';
+    track.innerHTML = Array(10).fill('<div class="skeleton-carousel"></div>').join('');
     try {
         const { data, error } = await _supabase
             .from('anime')
@@ -126,7 +130,7 @@ async function loadCarousel() {
 // Load public domain
 async function loadPublicDomain() {
     const grid = document.getElementById('public-domain-grid');
-    grid.innerHTML = '<div class="loading-spinner">Loading...</div>';
+    grid.innerHTML = Array(4).fill('<div class="skeleton-card"></div>').join('');
     try {
         const { data, error } = await _supabase
             .from('anime')
@@ -140,12 +144,38 @@ async function loadPublicDomain() {
     }
 }
 
+// Filter by genre
+async function filterByGenre(genre) {
+    const grid = document.getElementById('trending-grid');
+    const titleEl = document.getElementById('trending-title');
+    grid.innerHTML = '<div class="loading-spinner">Loading...</div>';
+    try {
+        let query = _supabase.from('anime').select('*');
+        if (genre !== 'All') {
+            // Assuming genre column is text array
+            query = query.contains('genre', [genre]);
+        }
+        const { data, error } = await query.limit(20);
+        if (error) throw error;
+        if (data.length === 0) {
+            grid.innerHTML = '<div class="error-message">No anime found in this genre</div>';
+        } else {
+            titleEl.textContent = genre === 'All' ? '🔥 Trending Now' : `📺 ${genre} Anime`;
+            grid.innerHTML = data.map(animeCard).join('');
+        }
+    } catch (err) {
+        grid.innerHTML = `<div class="error-message">${err.message}</div>`;
+    }
+}
+
 // Search
 async function handleSearch() {
     const query = document.getElementById('search-input').value.trim();
     if (!query) return;
-    const grid = document.getElementById('trending-grid'); // reuse trending grid for results
+    const grid = document.getElementById('trending-grid');
+    const titleEl = document.getElementById('trending-title');
     grid.innerHTML = '<div class="loading-spinner">Searching...</div>';
+    document.getElementById('clear-search').style.display = 'inline';
     try {
         const { data, error } = await _supabase
             .from('anime')
@@ -155,6 +185,7 @@ async function handleSearch() {
         if (data.length === 0) {
             grid.innerHTML = '<div class="error-message">No results found</div>';
         } else {
+            titleEl.textContent = `Search Results for "${query}"`;
             grid.innerHTML = data.map(animeCard).join('');
         }
     } catch (err) {
@@ -162,13 +193,21 @@ async function handleSearch() {
     }
 }
 
-// Genre filter demo (just UI for now – you can extend to filter by genre)
+// Clear search
+function clearSearch() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('clear-search').style.display = 'none';
+    document.getElementById('trending-title').textContent = '🔥 Trending Now';
+    loadTrending();
+}
+
+// Genre filter event listeners
 document.querySelectorAll('.genre-chip').forEach(chip => {
     chip.addEventListener('click', () => {
         document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
-        // Here you could implement actual filtering by genre (needs column in DB)
-        alert('Filter by genre – implement with Supabase query');
+        const genre = chip.getAttribute('data-genre');
+        filterByGenre(genre);
     });
 });
 
@@ -178,6 +217,34 @@ document.addEventListener('click', (e) => {
     if (card && card.dataset.id) {
         window.location.href = `/watch.html?id=${card.dataset.id}`;
     }
+});
+
+// Auth modal logic
+const modal = document.getElementById('auth-modal');
+const userMenu = document.getElementById('user-menu');
+const closeBtn = document.querySelector('.close');
+
+userMenu.addEventListener('click', () => {
+    modal.style.display = 'block';
+});
+
+closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+// Simple email/password auth (for demo; replace with Supabase Auth)
+document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    // Placeholder – implement Supabase signIn/signUp
+    alert('Auth not fully implemented. Use Supabase Auth.');
 });
 
 // Initial loads
@@ -191,3 +258,4 @@ document.getElementById('search-btn').addEventListener('click', handleSearch);
 document.getElementById('search-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSearch();
 });
+document.getElementById('clear-search').addEventListener('click', clearSearch);
