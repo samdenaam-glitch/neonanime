@@ -541,3 +541,33 @@ body {
         font-size: 1.4rem;
     }
 }
+
+/* Auth Tabs */
+.auth-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.auth-tab {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid transparent;
+}
+.auth-tab.active {
+    color: var(--accent-secondary);
+    border-bottom-color: var(--accent-secondary);
+}
+.auth-form {
+    display: none;
+}
+.auth-form.active-form {
+    display: block;
+}
+.auth-message {
+    margin-top: 1rem;
+    color: #ff7b9c;
+}
