@@ -172,12 +172,11 @@ document.querySelectorAll('.genre-chip').forEach(chip => {
     });
 });
 
-// Card click navigation
+// Card click navigation to watch page
 document.addEventListener('click', (e) => {
     const card = e.target.closest('.anime-card, .carousel-card');
     if (card && card.dataset.id) {
-        alert(`Navigate to anime ID: ${card.dataset.id} (implement watch page)`);
-        // window.location.href = `/watch.html?id=${card.dataset.id}`;
+        window.location.href = `/watch.html?id=${card.dataset.id}`;
     }
 });
 
