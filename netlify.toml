@@ -1,0 +1,13 @@
+[build]
+  publish = "."
+
+[build.environment]
+  # These will be injected at build time; you set them in Netlify UI
+  SUPABASE_URL = "https://your-project.supabase.co"
+  SUPABASE_ANON_KEY = "your-anon-key"
+
+# Optional: redirects for SPA (if you add routing later)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

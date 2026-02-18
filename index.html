@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON ANIME · Legal Stream</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+<div class="wrapper">
+    <header class="glow-header">
+        <div class="logo">電·ANIME<span>LEGALstream</span></div>
+        <div class="neon-nav">
+            <a href="#" class="nav-home">HOME</a>
+            <a href="#" class="nav-new">NEW</a>
+            <a href="#" class="nav-popular">POPULAR</a>
+            <a href="#" class="nav-genres">GENRES</a>
+            <a href="#" class="nav-originals">ORIGINALS</a>
+        </div>
+        <div class="search-area">
+            <input type="text" id="search-input" placeholder="search anime..." aria-label="Search">
+            <button class="search-btn" id="search-btn"><i class="fas fa-search"></i> FIND</button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <div id="hero-container">
+        <div class="loading-spinner">Loading featured...</div>
+    </div>
+
+    <!-- TRENDING GRID -->
+    <div class="section-neon">
+        <h2>⚡ TRENDING // NEON</h2>
+        <a href="#" class="view-all-trending">view all <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div id="trending-grid" class="anime-grid">
+        <div class="loading-spinner">Loading...</div>
+    </div>
+
+    <!-- CYBER CAROUSEL -->
+    <div class="section-neon">
+        <h2><i class="fas fa-sync fa-spin"></i> CYBER CAROUSEL</h2>
+        <a href="#" class="view-all-carousel">more +</a>
+    </div>
+    <div id="carousel" class="scroll-x">
+        <div class="loading-spinner">Loading...</div>
+    </div>
+
+    <!-- PUBLIC DOMAIN -->
+    <div class="section-neon">
+        <h2>📼 PUBLIC DOMAIN // CLASSICS</h2>
+        <a href="#" class="view-all-pd">explore archive</a>
+    </div>
+    <div id="public-domain-grid" class="anime-grid">
+        <div class="loading-spinner">Loading...</div>
+    </div>
+
+    <footer class="legal-note">
+        <p><i class="fas fa-balance-scale"></i> LEGAL STREAMING — all content is either public domain, Creative Commons, or original. Hosted on Supabase + Netlify.</p>
+    </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>

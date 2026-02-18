@@ -1,0 +1,35 @@
+/* Add to style.css */
+.loading-spinner {
+    text-align: center;
+    padding: 2rem;
+    color: #7b89a6;
+    font-style: italic;
+    grid-column: 1 / -1;
+}
+.error-message {
+    color: #ff7b9c;
+    background: rgba(255,0,255,0.1);
+    border: 1px solid magenta;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    grid-column: 1 / -1;
+}
+.anime-card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.anime-card:active {
+    transform: scale(0.98);
+}
+/* Ensure images cover properly */
+.card-img {
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1f35; /* fallback */
+}
+.tiny-cover {
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1f35;
+}
