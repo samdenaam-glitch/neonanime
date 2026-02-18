@@ -219,33 +219,114 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Auth modal logic
+// ==================== AUTHENTICATION ====================
 const modal = document.getElementById('auth-modal');
 const userMenu = document.getElementById('user-menu');
 const closeBtn = document.querySelector('.close');
 
+// Tab switching
+document.getElementById('login-tab').addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('login-tab').classList.add('active');
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active-form'));
+    document.getElementById('login-form').classList.add('active-form');
+});
+
+document.getElementById('signup-tab').addEventListener('click', () => {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('signup-tab').classList.add('active');
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active-form'));
+    document.getElementById('signup-form').classList.add('active-form');
+});
+
+// Open modal
 userMenu.addEventListener('click', () => {
     modal.style.display = 'block';
 });
 
+// Close modal
 closeBtn.addEventListener('click', () => {
     modal.style.display = 'none';
 });
 
 window.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    if (e.target === modal) modal.style.display = 'none';
+});
+
+// Handle Login
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const messageEl = document.getElementById('login-message');
+    messageEl.textContent = 'Logging in...';
+    
+    const { data, error } = await _supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+    
+    if (error) {
+        messageEl.textContent = error.message;
+    } else {
+        messageEl.textContent = 'Login successful!';
         modal.style.display = 'none';
+        updateUserMenu(data.user);
     }
 });
 
-// Simple email/password auth (for demo; replace with Supabase Auth)
-document.getElementById('auth-form').addEventListener('submit', async (e) => {
+// Handle Sign Up
+document.getElementById('signup-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    // Placeholder – implement Supabase signIn/signUp
-    alert('Auth not fully implemented. Use Supabase Auth.');
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const messageEl = document.getElementById('signup-message');
+    messageEl.textContent = 'Creating account...';
+    
+    const { data, error } = await _supabase.auth.signUp({
+        email,
+        password
+    });
+    
+    if (error) {
+        messageEl.textContent = error.message;
+    } else {
+        messageEl.textContent = 'Account created! Check your email for confirmation.';
+        // Optionally auto-login? No, user must confirm email first.
+    }
 });
+
+// Update user menu based on auth state
+async function updateUserMenu(user = null) {
+    const menuIcon = document.querySelector('.user-menu i');
+    if (user) {
+        menuIcon.className = 'fas fa-user-check'; // logged in icon
+        menuIcon.style.color = 'var(--accent-secondary)';
+    } else {
+        menuIcon.className = 'far fa-user-circle';
+        menuIcon.style.color = 'var(--text-dim)';
+    }
+}
+
+// Check initial auth state
+async function checkAuthState() {
+    const { data: { user } } = await _supabase.auth.getUser();
+    updateUserMenu(user);
+}
+
+// Listen for auth changes
+_supabase.auth.onAuthStateChange((event, session) => {
+    updateUserMenu(session?.user ?? null);
+});
+
+// Call on load
+checkAuthState();
+
+// Logout function (optional) – you could add a logout button in user menu dropdown later
+async function logout() {
+    await _supabase.auth.signOut();
+    updateUserMenu(null);
+}
 
 // Initial loads
 loadHero();
