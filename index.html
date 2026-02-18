@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEON ANIME – Watch Free Legal Anime</title>
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Watch free legal anime – public domain, indie, and Creative Commons content.">
+    <meta property="og:title" content="NEON ANIME">
+    <meta property="og:description" content="Stream classic and indie anime legally.">
+    <meta property="og:image" content="https://your-site.com/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,12 +38,29 @@
             <div class="search-area">
                 <input type="text" id="search-input" placeholder="Search anime...">
                 <button id="search-btn"><i class="fas fa-search"></i></button>
+                <button id="clear-search" style="display: none; background: none; border: none; color: white; font-size: 1.2rem;">✕</button>
             </div>
-            <div class="user-menu">
+            <div class="user-menu" id="user-menu">
                 <i class="far fa-user-circle"></i>
             </div>
         </div>
     </header>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="auth-container">
+                <h2>Login / Sign Up</h2>
+                <form id="auth-form">
+                    <input type="email" id="email" placeholder="Email" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit">Submit</button>
+                </form>
+                <p id="auth-message"></p>
+            </div>
+        </div>
+    </div>
 
     <main class="main-content">
         <!-- Hero carousel section -->
@@ -55,22 +78,22 @@
         <!-- Genre quick filters -->
         <section class="genre-filters">
             <div class="filter-scroll">
-                <button class="genre-chip active">All</button>
-                <button class="genre-chip">Action</button>
-                <button class="genre-chip">Adventure</button>
-                <button class="genre-chip">Comedy</button>
-                <button class="genre-chip">Drama</button>
-                <button class="genre-chip">Fantasy</button>
-                <button class="genre-chip">Horror</button>
-                <button class="genre-chip">Sci-Fi</button>
-                <button class="genre-chip">Slice of Life</button>
+                <button class="genre-chip active" data-genre="All">All</button>
+                <button class="genre-chip" data-genre="Action">Action</button>
+                <button class="genre-chip" data-genre="Adventure">Adventure</button>
+                <button class="genre-chip" data-genre="Comedy">Comedy</button>
+                <button class="genre-chip" data-genre="Drama">Drama</button>
+                <button class="genre-chip" data-genre="Fantasy">Fantasy</button>
+                <button class="genre-chip" data-genre="Horror">Horror</button>
+                <button class="genre-chip" data-genre="Sci-Fi">Sci-Fi</button>
+                <button class="genre-chip" data-genre="Slice of Life">Slice of Life</button>
             </div>
         </section>
 
         <!-- Trending now -->
         <section class="content-section">
             <div class="section-header">
-                <h2>🔥 Trending Now</h2>
+                <h2 id="trending-title">🔥 Trending Now</h2>
                 <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
             </div>
             <div class="anime-grid" id="trending-grid">
